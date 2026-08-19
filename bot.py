@@ -871,4 +871,47 @@ def main() -> None:
         logger.info("Go to: Railway Dashboard -> Your Project -> Variables -> Add Variable")
         sys.exit(1)
     
-    logger.info(f"✅ Token found! Token
+    logger.info(f"✅ Token found! Token starts with: {token[:10]}...")
+    logger.info("🚀 Starting @josealvarez21_bot...")
+    logger.info("🎯 Triple Function: TTS + Grammar + Spelling")
+    
+    try:
+        # Create application
+        application = Application.builder().token(token).build()
+        
+        # Add command handlers
+        application.add_handler(CommandHandler("start", start))
+        application.add_handler(CommandHandler("help", help_command))
+        application.add_handler(CommandHandler("about", about_command))
+        application.add_handler(CommandHandler("lang", language_menu))
+        application.add_handler(CommandHandler("speed", speed_menu))
+        application.add_handler(CommandHandler("tts", tts_command))
+        application.add_handler(CommandHandler("grammar", grammar_command))
+        application.add_handler(CommandHandler("spell", spell_command))
+        
+        # Add callback query handlers
+        application.add_handler(CallbackQueryHandler(language_callback, pattern="^lang_"))
+        application.add_handler(CallbackQueryHandler(speed_callback, pattern="^speed_"))
+        application.add_handler(CallbackQueryHandler(process_callback, pattern="^process_"))
+        
+        # Add message handlers
+        application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
+        application.add_handler(MessageHandler(filters.VOICE, voice_handler))
+        
+        # Add error handler
+        application.add_error_handler(error_handler)
+        
+        logger.info("✅ @josealvarez21_bot is running and ready!")
+        logger.info("🎯 Bot Username: @josealvarez21_bot")
+        logger.info(f"📅 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info("📝 Features: TTS + Grammar Correction + Spelling Check")
+        
+        # Run the bot
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to start bot: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
